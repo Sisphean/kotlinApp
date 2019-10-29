@@ -6,8 +6,12 @@ import androidx.lifecycle.viewModelScope
 import com.google.gson.Gson
 import com.sisyphean.kotlinapp.base.BaseViewModel
 import com.sisyphean.kotlinapp.model.api.WebSocketClient
+import com.sisyphean.kotlinapp.model.bean.BannerBean
+import com.sisyphean.kotlinapp.model.bean.Market
 import com.sisyphean.kotlinapp.model.bean.WSMarkets
 import com.sisyphean.kotlinapp.model.bean.WSRequest
+import com.sisyphean.kotlinapp.model.bean.enums.MsgType
+import com.sisyphean.kotlinapp.model.repository.HomeRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -17,25 +21,45 @@ import okhttp3.WebSocketListener
 
 class HomeViewModel : BaseViewModel() {
 
-    val msgData: MutableLiveData<WSMarkets> = MutableLiveData()
+    val repository: HomeRepository by lazy { HomeRepository() }
 
-    lateinit var mWebSocket: WebSocket
+    val msgData: MutableLiveData<List<Market>> = MutableLiveData()
 
-    fun getTicker() {
+    val msgChangeData: MutableLiveData<List<Market>> = MutableLiveData()
+
+    val bannerData: MutableLiveData<List<BannerBean>> = MutableLiveData()
+
+    private lateinit var mWebSocket: WebSocket
+
+    fun getMarkets() {
         mWebSocket = WebSocketClient.create(object : WebSocketListener() {
             override fun onOpen(webSocket: WebSocket, response: Response) {
                 super.onOpen(webSocket, response)
-                webSocket.send(Gson().toJson(WSRequest(4)))
+                webSocket.send(Gson().toJson(WSRequest(MsgType.MARKET.value)))
             }
 
             override fun onMessage(webSocket: WebSocket, text: String) {
                 super.onMessage(webSocket, text)
                 Log.d("HomeViewModel", "msg: " + text)
                 val wsMarkets = Gson().fromJson<WSMarkets>(text, WSMarkets::class.java)
-                msgData.postValue(wsMarkets)
+
+                msgData.postValue(wsMarkets.data)
+                msgChangeData.postValue(wsMarkets.changeData)
             }
         })
     }
+
+    fun getBanner() {
+        viewModelScope.launch(Dispatchers.Default) {
+
+            val response = repository.getBanners()
+
+            withContext(Dispatchers.Main) {
+                bannerData.value = response.data
+            }
+        }
+    }
+
 
     fun closeWebSocket() {
         mWebSocket.close(1000, "")

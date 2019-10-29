@@ -58,4 +58,6 @@ dependencies {
     }
     annotationProcessor 'com.github.bumptech.glide:compiler:4.9.0'
     implementation 'com.scwang.smartrefresh:SmartRefreshLayout:1.1.0'
+    implementation "android.arch.paging:runtime:1.0.1"
+    implementation 'com.youth.banner:banner:1.4.10'
 }

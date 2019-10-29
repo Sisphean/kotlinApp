@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/header_market"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <com.youth.banner.Banner
+        android:id="@+id/banner_article"
+        android:layout_width="match_parent"
+        android:layout_height="150dp"/>
+
+   <!-- <com.youth.banner.Banner
+        android:id="@+id/banner_article_top"
+        android:layout_width="match_parent"
+        android:layout_height="30dp" />
+
+    <com.youth.banner.Banner
+        android:id="@+id/banner_market"
+        android:layout_width="match_parent"
+        android:layout_height="80dp"/>-->
+
+</LinearLayout>

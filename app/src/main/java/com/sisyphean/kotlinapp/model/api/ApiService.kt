@@ -1,11 +1,9 @@
 package com.sisyphean.kotlinapp.model.api
 
+import com.sisyphean.kotlinapp.model.bean.BannerBean
 import com.sisyphean.kotlinapp.model.bean.Response
 import com.sisyphean.kotlinapp.model.bean.LoginBean
-import retrofit2.http.Field
-import retrofit2.http.FieldMap
-import retrofit2.http.FormUrlEncoded
-import retrofit2.http.POST
+import retrofit2.http.*
 import java.util.*
 
 interface ApiService {
@@ -20,4 +18,6 @@ interface ApiService {
     suspend fun login(@Field("account") accoint: String,
                       @Field("password") password: String): Response<LoginBean>
 
+    @GET("/banners")
+    suspend fun banners() : Response<List<BannerBean>>
 }
