@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">kotlinApp</string>
+    
+    <string name="tab_home">首页</string>
+    <string name="tab_ticker">行情</string>
+    <string name="tab_trade">交易</string>
+    <string name="tab_asset">资产</string>
+</resources>
