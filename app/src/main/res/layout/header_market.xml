@@ -3,22 +3,33 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/header_market"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:orientation="vertical">
 
     <com.youth.banner.Banner
         android:id="@+id/banner_article"
         android:layout_width="match_parent"
-        android:layout_height="150dp"/>
+        android:layout_height="150dp"
+        app:image_scale_type="center_crop" />
 
-   <!-- <com.youth.banner.Banner
-        android:id="@+id/banner_article_top"
+    <com.sisyphean.kotlinapp.ui.view.TextBannerView
+        android:id="@+id/tv_banner"
         android:layout_width="match_parent"
-        android:layout_height="30dp" />
+        android:layout_height="38dp"/>
 
-    <com.youth.banner.Banner
-        android:id="@+id/banner_market"
+    <ViewFlipper
+        android:id="@+id/view_flipper"
         android:layout_width="match_parent"
-        android:layout_height="80dp"/>-->
+        android:layout_height="match_parent"/>
+
+    <!-- <com.youth.banner.Banner
+         android:id="@+id/banner_article_top"
+         android:layout_width="match_parent"
+         android:layout_height="30dp" />
+
+     <com.youth.banner.Banner
+         android:id="@+id/banner_market"
+         android:layout_width="match_parent"
+         android:layout_height="80dp"/>-->
 
 </LinearLayout>

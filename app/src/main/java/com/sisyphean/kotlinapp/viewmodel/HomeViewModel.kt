@@ -6,10 +6,7 @@ import androidx.lifecycle.viewModelScope
 import com.google.gson.Gson
 import com.sisyphean.kotlinapp.base.BaseViewModel
 import com.sisyphean.kotlinapp.model.api.WebSocketClient
-import com.sisyphean.kotlinapp.model.bean.BannerBean
-import com.sisyphean.kotlinapp.model.bean.Market
-import com.sisyphean.kotlinapp.model.bean.WSMarkets
-import com.sisyphean.kotlinapp.model.bean.WSRequest
+import com.sisyphean.kotlinapp.model.bean.*
 import com.sisyphean.kotlinapp.model.bean.enums.MsgType
 import com.sisyphean.kotlinapp.model.repository.HomeRepository
 import kotlinx.coroutines.Dispatchers
@@ -21,13 +18,15 @@ import okhttp3.WebSocketListener
 
 class HomeViewModel : BaseViewModel() {
 
-    val repository: HomeRepository by lazy { HomeRepository() }
+    private val repository: HomeRepository by lazy { HomeRepository() }
 
     val msgData: MutableLiveData<List<Market>> = MutableLiveData()
 
     val msgChangeData: MutableLiveData<List<Market>> = MutableLiveData()
 
     val bannerData: MutableLiveData<List<BannerBean>> = MutableLiveData()
+
+    val articleData: MutableLiveData<List<ArticleBean>> = MutableLiveData()
 
     private lateinit var mWebSocket: WebSocket
 
@@ -56,6 +55,16 @@ class HomeViewModel : BaseViewModel() {
 
             withContext(Dispatchers.Main) {
                 bannerData.value = response.data
+            }
+        }
+    }
+
+    fun getArticles() {
+        viewModelScope.launch(Dispatchers.Default) {
+            val response = repository.getArticles(1, 1, 3)
+
+            withContext(Dispatchers.Main) {
+                articleData.value = response.data.list
             }
         }
     }

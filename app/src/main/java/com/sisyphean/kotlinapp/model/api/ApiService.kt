@@ -1,8 +1,6 @@
 package com.sisyphean.kotlinapp.model.api
 
-import com.sisyphean.kotlinapp.model.bean.BannerBean
-import com.sisyphean.kotlinapp.model.bean.Response
-import com.sisyphean.kotlinapp.model.bean.LoginBean
+import com.sisyphean.kotlinapp.model.bean.*
 import retrofit2.http.*
 import java.util.*
 
@@ -20,4 +18,9 @@ interface ApiService {
 
     @GET("/banners")
     suspend fun banners() : Response<List<BannerBean>>
+
+    @GET("/bbs/articles/{category}")
+    suspend fun articles(@Path("category") category: Int,
+                         @Query("page") page: Int,
+                         @Query("limit") limit: Int) : Response<PageInfo<ArticleBean>>
 }

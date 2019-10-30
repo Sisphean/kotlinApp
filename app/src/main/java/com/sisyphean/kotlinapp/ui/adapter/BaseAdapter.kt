@@ -9,7 +9,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 
-abstract class BaseAdapter<T>(private val context: Context?) : RecyclerView.Adapter<BaseAdapter.BaseViewHolder>(){
+abstract class BaseAdapter<T>(val context: Context?) : RecyclerView.Adapter<BaseAdapter.BaseViewHolder>(){
 
     val mData: ArrayList<T> = arrayListOf()
 
