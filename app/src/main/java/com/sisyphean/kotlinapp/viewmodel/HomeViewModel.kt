@@ -34,6 +34,7 @@ class HomeViewModel : BaseViewModel() {
         mWebSocket = WebSocketClient.create(object : WebSocketListener() {
             override fun onOpen(webSocket: WebSocket, response: Response) {
                 super.onOpen(webSocket, response)
+                Log.d("HomeViewModel", "onOpen is called...")
                 webSocket.send(Gson().toJson(WSRequest(MsgType.MARKET.value)))
             }
 
@@ -44,6 +45,11 @@ class HomeViewModel : BaseViewModel() {
 
                 msgData.postValue(wsMarkets.data)
                 msgChangeData.postValue(wsMarkets.changeData)
+            }
+
+            override fun onClosed(webSocket: WebSocket, code: Int, reason: String) {
+                super.onClosed(webSocket, code, reason)
+                Log.d("HomeViewModel", "onClosed is called...code:${code} reason:${reason}")
             }
         })
     }
@@ -71,6 +77,6 @@ class HomeViewModel : BaseViewModel() {
 
 
     fun closeWebSocket() {
-        mWebSocket.close(1000, "")
+        mWebSocket.close(1000, "close normal")
     }
 }

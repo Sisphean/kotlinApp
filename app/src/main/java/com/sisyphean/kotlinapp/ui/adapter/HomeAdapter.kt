@@ -58,7 +58,7 @@ class HomeAdapter(context: Context?) : BaseAdapter<Market>(context) {
 
     fun updateData(data: List<Market>?) {
         data?.let {
-            for (market in mData) {
+            for ((index, market) in mData.withIndex()) {
                 for (d in it) {
                     if (market.tradePairsId == d.tradePairsId) {
                         market.change = d.change
@@ -67,10 +67,12 @@ class HomeAdapter(context: Context?) : BaseAdapter<Market>(context) {
                         market.latestRmbPrice = d.latestRmbPrice
                         market.maxPrice24h = d.maxPrice24h
                         market.minPrice24h = d.minPrice24h
+
+                        notifyItemChanged(index + 1)
                     }
                 }
             }
-            notifyDataSetChanged()
+
         }
     }
 

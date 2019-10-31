@@ -2,8 +2,7 @@ package com.sisyphean.kotlinapp.ui.fragment
 
 import android.util.Log
 import android.view.LayoutInflater
-import android.view.animation.Animation
-import android.view.animation.AnimationUtils
+import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.ViewFlipper
 import androidx.fragment.app.Fragment
@@ -14,8 +13,9 @@ import com.sisyphean.kotlinapp.base.BaseVMFragment
 import com.sisyphean.kotlinapp.model.api.ApiService
 import com.sisyphean.kotlinapp.model.bean.ArticleBean
 import com.sisyphean.kotlinapp.model.bean.BannerBean
+import com.sisyphean.kotlinapp.ui.adapter.AutoPollAdapter
 import com.sisyphean.kotlinapp.ui.adapter.HomeAdapter
-import com.sisyphean.kotlinapp.ui.view.TextBannerView
+import com.sisyphean.kotlinapp.ui.view.AutoPollRecyclerView
 import com.sisyphean.kotlinapp.utils.GlideImageLoader
 import com.sisyphean.kotlinapp.viewmodel.HomeViewModel
 import com.youth.banner.Banner
@@ -34,11 +34,13 @@ class HomeFragment : BaseVMFragment<HomeViewModel>() {
 
     private lateinit var banner: Banner
 
-    private lateinit var tvBanner: TextBannerView
-
     private lateinit var viewFlipper: ViewFlipper
 
+    private lateinit var autoPollRecyclerView: AutoPollRecyclerView
+
     private val homeAdapter by lazy { HomeAdapter(activity) }
+
+    private val autoPollAdapter by lazy { AutoPollAdapter(activity) }
 
     override fun setLayoutId(): Int = R.layout.fragment_home
 
@@ -57,10 +59,14 @@ class HomeFragment : BaseVMFragment<HomeViewModel>() {
 
         mViewModel.getBanner()
 
-        tvBanner = header.findViewById(R.id.tv_banner)
         viewFlipper = header.findViewById(R.id.view_flipper)
         mViewModel.getArticles()
 
+        autoPollRecyclerView = header.findViewById(R.id.auto_poll_view)
+        autoPollRecyclerView.run {
+            layoutManager = LinearLayoutManager(activity, LinearLayoutManager.HORIZONTAL, false)
+            adapter = autoPollAdapter
+        }
 
         recycler_view.run {
             layoutManager = LinearLayoutManager(activity)
@@ -75,6 +81,8 @@ class HomeFragment : BaseVMFragment<HomeViewModel>() {
         mViewModel.apply {
             msgData.observe(this@HomeFragment, Observer {
                 homeAdapter.loadData(it)
+                autoPollAdapter.loadData(it)
+                autoPollRecyclerView.startPoll()
             })
 
             msgChangeData.observe(this@HomeFragment, Observer {
@@ -96,28 +104,24 @@ class HomeFragment : BaseVMFragment<HomeViewModel>() {
     }
 
     private fun setArticles(it: List<ArticleBean>) {
-        for (article in it) {
-            articles.add(article.title)
+        fun getTextView(text: String) : TextView{
+            val textView = TextView(activity)
+            textView.text = text
+            return textView
         }
-        tvBanner.setDatas(articles)
-
-        viewFlipper.addView(getTextView("111111111"))
-        viewFlipper.addView(getTextView("222222222"))
-        viewFlipper.addView(getTextView("333333333"))
+        for (article in it) {
+            viewFlipper.addView(getTextView(article.title))
+        }
 
         viewFlipper.setInAnimation(activity, R.anim.anim_bottom_in)
         viewFlipper.setOutAnimation(activity, R.anim.anim_top_out)
 
-        viewFlipper.flipInterval = 1000
+        viewFlipper.flipInterval = 2000
 
         viewFlipper.startFlipping()
     }
 
-    fun getTextView(text: String) : TextView{
-        val textView = TextView(activity)
-        textView.text = text
-        return textView
-    }
+
 
     private fun setBanners(it: List<BannerBean>) {
         for (banner in it) {
@@ -133,7 +137,6 @@ class HomeFragment : BaseVMFragment<HomeViewModel>() {
         Log.d("xxx", "onResume is called...")
         mViewModel.getMarkets()
         banner.startAutoPlay()
-        tvBanner.startViewAnimator()
     }
 
     override fun onPause() {
@@ -141,7 +144,6 @@ class HomeFragment : BaseVMFragment<HomeViewModel>() {
         Log.d("xxx", "onPause is called...")
         mViewModel.closeWebSocket()
         banner.stopAutoPlay()
-        tvBanner.stopViewAnimator()
     }
 
     override fun onDestroy() {

@@ -12,24 +12,13 @@
         android:layout_height="150dp"
         app:image_scale_type="center_crop" />
 
-    <com.sisyphean.kotlinapp.ui.view.TextBannerView
-        android:id="@+id/tv_banner"
-        android:layout_width="match_parent"
-        android:layout_height="38dp"/>
-
     <ViewFlipper
         android:id="@+id/view_flipper"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="38dp"/>
 
-    <!-- <com.youth.banner.Banner
-         android:id="@+id/banner_article_top"
-         android:layout_width="match_parent"
-         android:layout_height="30dp" />
-
-     <com.youth.banner.Banner
-         android:id="@+id/banner_market"
-         android:layout_width="match_parent"
-         android:layout_height="80dp"/>-->
-
+    <com.sisyphean.kotlinapp.ui.view.AutoPollRecyclerView
+        android:id="@+id/auto_poll_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
 </LinearLayout>
