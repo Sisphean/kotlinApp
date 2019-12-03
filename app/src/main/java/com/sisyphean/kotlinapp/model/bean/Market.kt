@@ -14,6 +14,6 @@ data class Market(var change: String,
                   @SerializedName("min_price_24h")
                   var minPrice24h: String,
                   @SerializedName("trade_pairs_id")
-                  val tradePairsId: Int,
+                  var tradePairsId: Int,
                   @SerializedName("trade_pairs_name")
-                  val tradePairsName: String)
+                  var tradePairsName: String)

@@ -5,6 +5,9 @@ import android.util.AttributeSet
 import android.view.MotionEvent
 import androidx.recyclerview.widget.RecyclerView
 import java.lang.ref.WeakReference
+import android.view.animation.LinearInterpolator
+
+
 
 class AutoPollRecyclerView(context: Context, attrs: AttributeSet?) : RecyclerView(context, attrs) {
 
@@ -15,7 +18,7 @@ class AutoPollRecyclerView(context: Context, attrs: AttributeSet?) : RecyclerVie
     fun startPoll() {
         if (isRunning) stopPoll()
         isRunning = true
-        postDelayed(autoPollTask, 16)
+        postDelayed(autoPollTask, 42)
     }
 
     fun stopPoll() {
@@ -38,8 +41,8 @@ class AutoPollRecyclerView(context: Context, attrs: AttributeSet?) : RecyclerVie
         override fun run() {
             val reference: AutoPollRecyclerView? = mReference.get()
             if (reference != null && reference.isRunning) {
-                reference.scrollBy(2, 2)
-                reference.postDelayed(this, 16)
+                reference.smoothScrollBy(20, 0)
+                reference.postDelayed(this, 42)
             }
         }
     }

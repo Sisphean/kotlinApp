@@ -8,7 +8,9 @@ interface ApiService {
 
     companion object {
         const val BASE_URL = "http://223.247.152.64:8081"
-        const val BASE_WS_URL ="ws://223.247.152.64:8081/websocket"
+//        const val BASE_URL = "https://www.bixinw.com:8081"
+//        const val BASE_WS_URL ="ws://223.247.152.64:8081/websocket"
+        const val BASE_WS_URL ="wss://www.bixinw.com:8081/websocket"
     }
 
     @FormUrlEncoded

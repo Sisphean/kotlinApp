@@ -7,4 +7,9 @@
     <color name="bg_white">#FFFFFF</color>
 
     <color name="line_gray">#DDDDDD</color>
+
+    <color name="text_black">#000000</color>
+    <color name="text_white">#FFFFFF</color>
+    <color name="text_green">#42b983</color>
+    <color name="text_red">#f56c6c</color>
 </resources>

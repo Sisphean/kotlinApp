@@ -1,13 +1,17 @@
 package com.sisyphean.kotlinapp.ui.fragment
 
 import android.util.Log
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.ViewFlipper
+import androidx.core.view.setPadding
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.scwang.smartrefresh.layout.api.RefreshLayout
+import com.scwang.smartrefresh.layout.listener.OnRefreshListener
 import com.sisyphean.kotlinapp.R
 import com.sisyphean.kotlinapp.base.BaseVMFragment
 import com.sisyphean.kotlinapp.model.api.ApiService
@@ -22,7 +26,7 @@ import com.youth.banner.Banner
 import com.youth.banner.BannerConfig
 import kotlinx.android.synthetic.main.fragment_home.*
 
-class HomeFragment : BaseVMFragment<HomeViewModel>() {
+class HomeFragment : BaseVMFragment<HomeViewModel>(), OnRefreshListener {
 
     companion object {
         fun getInstance(): Fragment = HomeFragment()
@@ -74,6 +78,9 @@ class HomeFragment : BaseVMFragment<HomeViewModel>() {
             adapter = homeAdapter
         }
 
+        refresh_layout.setOnRefreshListener(this)
+        refresh_layout.setEnableLoadMore(false)
+
     }
 
     override fun subscribe() {
@@ -83,6 +90,7 @@ class HomeFragment : BaseVMFragment<HomeViewModel>() {
                 homeAdapter.loadData(it)
                 autoPollAdapter.loadData(it)
                 autoPollRecyclerView.startPoll()
+                refresh_layout.finishRefresh()
             })
 
             msgChangeData.observe(this@HomeFragment, Observer {
@@ -104,11 +112,17 @@ class HomeFragment : BaseVMFragment<HomeViewModel>() {
     }
 
     private fun setArticles(it: List<ArticleBean>) {
-        fun getTextView(text: String) : TextView{
+
+        fun getTextView(text: String): TextView {
             val textView = TextView(activity)
-            textView.text = text
+            textView.run {
+                this.text = text
+                gravity = Gravity.CENTER_VERTICAL
+                setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_notice, 0, 0, 0)
+            }
             return textView
         }
+
         for (article in it) {
             viewFlipper.addView(getTextView(article.title))
         }
@@ -120,7 +134,6 @@ class HomeFragment : BaseVMFragment<HomeViewModel>() {
 
         viewFlipper.startFlipping()
     }
-
 
 
     private fun setBanners(it: List<BannerBean>) {
@@ -150,5 +163,10 @@ class HomeFragment : BaseVMFragment<HomeViewModel>() {
         super.onDestroy()
         Log.d("xxx", "onDestroy is called...")
         mViewModel.closeWebSocket()
+    }
+
+    override fun onRefresh(refreshLayout: RefreshLayout) {
+        mViewModel.closeWebSocket()
+        mViewModel.getMarkets()
     }
 }

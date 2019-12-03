@@ -55,9 +55,10 @@ abstract class BaseAdapter<T>(val context: Context?) : RecyclerView.Adapter<Base
             return view as T
         }
 
-        fun setText(viewId: Int, text: String) {
+        fun setText(viewId: Int, text: String, color: Int?) {
             val tv: TextView = getView(viewId)
             tv.text = text
+            color?.let { tv.setTextColor(it) }
         }
 
         fun setImgResource(viewId: Int, resId: Int) {

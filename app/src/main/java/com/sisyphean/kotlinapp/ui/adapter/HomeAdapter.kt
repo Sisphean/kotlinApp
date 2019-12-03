@@ -5,8 +5,11 @@ import android.util.SparseArray
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
+import androidx.core.content.ContextCompat
 import com.sisyphean.kotlinapp.R
 import com.sisyphean.kotlinapp.model.bean.Market
+import java.math.BigDecimal
 
 class HomeAdapter(context: Context?) : BaseAdapter<Market>(context) {
 
@@ -32,9 +35,12 @@ class HomeAdapter(context: Context?) : BaseAdapter<Market>(context) {
 
         } else {
             val data = mData[position - 1]
-            holder.setText(R.id.tv_trade_pairs_name, data.tradePairsName)
-            holder.setText(R.id.tv_latest_price, data.latestPrice)
-            holder.setText(R.id.tv_change_rate, data.changeRate)
+            holder.setText(R.id.tv_trade_pairs_name, data.tradePairsName, null)
+            holder.setText(R.id.tv_latest_price, data.latestPrice, null)
+            val changeRateView = holder.getView<TextView>(R.id.tv_change_rate)
+            val changeRate = data.changeRate.toBigDecimal()
+            changeRateView.text = "${changeRate.multiply(BigDecimal.valueOf(100).setScale(2, BigDecimal.ROUND_HALF_DOWN))}%"
+            changeRateView.setBackgroundColor(ContextCompat.getColor(context!!, if (changeRate >= BigDecimal.ZERO) R.color.text_green else R.color.text_red))
         }
 
     }
@@ -68,11 +74,15 @@ class HomeAdapter(context: Context?) : BaseAdapter<Market>(context) {
                         market.maxPrice24h = d.maxPrice24h
                         market.minPrice24h = d.minPrice24h
 
-                        notifyItemChanged(index + 1)
+//                        notifyItemChanged(index + 1)
                     }
                 }
             }
+            val sortedData = mData.sortedByDescending { item -> item.changeRate.toBigDecimal() }
+            mData.clear()
+            mData.addAll(sortedData)
 
+            notifyItemRangeChanged(1, mData.size)
         }
     }
 
